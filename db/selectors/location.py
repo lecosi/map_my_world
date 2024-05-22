@@ -13,7 +13,7 @@ def get_location_by_params(
     name: str,
     latitude: float,
     longitude: float,
-    session_db: Session = Depends(get_database_session)
+    session_db: Session
 ) -> Optional[Location]:
     query = select(Location).where(
         Location.name == name,

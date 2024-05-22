@@ -5,7 +5,7 @@ from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 
 from db.models import Location
-from db.selectors.locations import get_location_by_params
+from db.selectors.location import get_location_by_params
 from schemas.location_schema import CreateLocationModel
 
 
