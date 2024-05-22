@@ -1,4 +1,5 @@
 import logging
+
 from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 
@@ -28,6 +29,9 @@ def create_category(
         category_control.validate_and_create(
             category_data=category_data
         )
+    except ValueError as e:
+        return HTTPException(status.HTTP_400_BAD_REQUEST, e)
+
     except Exception as e:
         logger.error(f'API :: create_category :: {e}')
         msg = 'there is a problem when creating a category, try again later'
@@ -46,6 +50,9 @@ def create_location(
         location_control.validate_and_create(
             location_data=location_data
         )
+    except ValueError as e:
+        return HTTPException(status.HTTP_400_BAD_REQUEST, e.args[0])
+
     except Exception as e:
         logger.error(f'API :: create_location :: {e}')
         msg = 'there is a problem when creating a location, try again later'

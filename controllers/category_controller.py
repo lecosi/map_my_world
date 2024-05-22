@@ -5,8 +5,8 @@ from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 
 from db.models import Category
-from schemas.category_schema import CreateCategoryModel
 from db.selectors.category import get_category_by_name
+from schemas.category_schema import CreateCategoryModel
 
 
 class CategoryBase(ABC):
@@ -23,7 +23,10 @@ class CategoryCrudController(CategoryBase):
         self,
         category_data: CreateCategoryModel,
     ) -> Optional[Category]:
-        category_qs = get_category_by_name(name=category_data.name)
+        category_qs = get_category_by_name(
+            name=category_data.name,
+            session_db=self._db_connection
+        )
         if category_qs:
             return
 

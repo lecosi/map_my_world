@@ -5,9 +5,8 @@ from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 
 from db.models import Location
-from schemas.location_schema import CreateLocationModel
-
 from db.selectors.locations import get_location_by_params
+from schemas.location_schema import CreateLocationModel
 
 
 class LocationBase(ABC):
@@ -24,6 +23,7 @@ class LocationCrudController(LocationBase):
         self,
         location_data: CreateLocationModel,
     ) -> Optional[Location]:
+
         location_qs = get_location_by_params(
             name=location_data.name,
             latitude=location_data.latitude,
@@ -39,13 +39,17 @@ class LocationCrudController(LocationBase):
         self,
         data: CreateLocationModel
     ) -> Optional[Location]:
-        new_location = Location(
-            name=data.name,
-            latitude=data.latitude,
-            longitude=data.longitude,
-            category_id=data.category_id
-        )
-        self._db_connection.add(new_location)
-        self._db_connection.commit()
-        self._db_connection.refresh(new_location)
-        return new_location
+        try:
+            new_location = Location(
+                name=data.name,
+                latitude=data.latitude,
+                longitude=data.longitude,
+                category_id=data.category_id
+            )
+            self._db_connection.add(new_location)
+            self._db_connection.commit()
+            self._db_connection.refresh(new_location)
+            return new_location
+
+        except Exception:
+            raise ValueError('category does not exists')

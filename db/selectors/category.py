@@ -15,3 +15,12 @@ def get_category_by_name(
 ) -> Optional[Category]:
     query = select(Category).where(Category.name == name)
     return session_db.execute(query).first()
+
+
+def get_category_by_id(
+    *,
+    id: int,
+    session_db: Session = Depends(get_database_session)
+) -> Optional[Category]:
+    query = select(Category).where(id == id)
+    return session_db.execute(query).first()

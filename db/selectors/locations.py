@@ -2,8 +2,8 @@
 from typing import Optional
 
 from fastapi import Depends
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from db.connection import get_database_session
 from db.models import Location
