@@ -1,7 +1,9 @@
+from operator import and_
 from typing import Optional, List
 from datetime import datetime, timedelta
 
 from sqlalchemy import select, func, asc
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from db.models import LocationCategoryReviewed, Category, Location
 from db.selectors.constants import MAX_LIMIT_RECORDS_PER_REVIEW, \
@@ -40,11 +42,15 @@ def get_location_review_list(
         Category.id
     ).select_from(
         LocationCategoryReviewed
-    ).join(Category).join(
+    ).join(
+        Category, Category.id == LocationCategoryReviewed.category_id
+    ).join(
         Location, Location.id == LocationCategoryReviewed.location_id
     ).filter(
-        LocationCategoryReviewed.is_active == True,
-        func.DATE(LocationCategoryReviewed.last_verification_date) <= formatted_date
+        and_(LocationCategoryReviewed.is_active == True, or_(
+            func.DATE(LocationCategoryReviewed.last_verification_date) <= formatted_date,
+            func.DATE(LocationCategoryReviewed.last_verification_date) is None
+        ))
     ).group_by(
         LocationCategoryReviewed.id, Category.id, Location.id
     ).order_by(

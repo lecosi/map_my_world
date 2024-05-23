@@ -25,11 +25,10 @@ def home():
 def get_recommendation(
     session_db: Session = Depends(get_database_session)
 ):
-    location_review = LocationReviewCrudController(session=session_db)
-    return location_review.get_data_list()
-    """try:
+    try:
         location_review = LocationReviewCrudController(session=session_db)
         return location_review.get_data_list()
+
     except ValueError as e:
         return HTTPException(status.HTTP_400_BAD_REQUEST, e)
 
@@ -37,7 +36,7 @@ def get_recommendation(
         logger.error(f'API :: get_recommendation :: {e}')
         msg = \
             'there is a problem when get recommendation list, try again later'
-        return HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, msg)"""
+        return HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, msg)
 
 
 @app.post('/category', tags=['Category'])
